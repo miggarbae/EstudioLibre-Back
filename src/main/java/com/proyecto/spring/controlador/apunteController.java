@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/apuntes")
+@RequestMapping("/api/apunte")
 @CrossOrigin(origins = "http://localhost:4200") //esto es para permitir que angular se comunique con este controlador
-public class apuntesController {
+public class apunteController {
 
 }

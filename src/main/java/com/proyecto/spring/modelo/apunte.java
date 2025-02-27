@@ -5,34 +5,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
 
 @Getter
 @Setter
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class usuario{
+
+public class apunte {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
-    
-    @OneToMany(mappedBy = "usuario")
-    private List<apunte> apunte;
+    private String contenido;
+    private String titulo;
 
-    @OneToMany(mappedBy = "usuario")
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "asignatura_id")
+    private asignatura asignatura;
+
+    @OneToMany(mappedBy = "apunte")
     private List<Comentario> comentarios;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "apunte")
     private List<valoracion> valoraciones;
 }
