@@ -23,10 +23,10 @@ public class valoracion {
     private int puntuacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "apunte_id")
+    @JoinColumn(name = "apunte_id", nullable = false)
     private apunte apunte;
 }

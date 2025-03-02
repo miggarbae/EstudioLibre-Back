@@ -7,11 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Data
 public class Comentario {
@@ -23,10 +19,10 @@ public class Comentario {
     private String contenido;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "apunte_id")
+    @JoinColumn(name = "apunte_id", nullable = false)
     private apunte apunte;
 }
