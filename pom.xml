@@ -123,6 +123,28 @@
 			<artifactId>tika-core</artifactId>
 			<version>2.7.0</version>
 		</dependency>
+
+		<!-- Apache POI para manejar archivos Word -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.3</version>
+		</dependency>
+
+		<!-- Apache POI Scratchpad para manejar archivos Word antiguos (.doc) -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>5.2.3</version>
+		</dependency>
+
+		<!-- PDFBox para generar PDF -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.30</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
