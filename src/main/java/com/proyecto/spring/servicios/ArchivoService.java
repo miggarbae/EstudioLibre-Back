@@ -1,6 +1,8 @@
 package com.proyecto.spring.servicios;
 
+import com.proyecto.spring.dto.ArchivoBusquedaDTO;
 import com.proyecto.spring.modelos.Archivo;
+import com.proyecto.spring.modelos.Comentario;
 import com.proyecto.spring.modelos.Usuario;
 import com.proyecto.spring.repositorios.ArchivoRepository;
 
@@ -20,9 +22,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ArchivoService {
@@ -127,5 +129,29 @@ public class ArchivoService {
 
     public List<Archivo> obtenerArchivosPorUsuario(Long usuarioId) {
         return archivoRepository.findByUsuarioId(usuarioId);
+    }
+
+    public List<Archivo> buscarArchivos(ArchivoBusquedaDTO criterios) {
+        List<Archivo> archivos = archivoRepository.buscarArchivos(
+                criterios.getNombre(),
+                criterios.getAsignatura(),
+                criterios.getNivelEstudio()
+        );
+    
+        // Aplicar ordenación dinámica
+        if ("fecha".equalsIgnoreCase(criterios.getOrdenarPor())) {
+            archivos.sort(Comparator.comparing(Archivo::getFechaSubida).reversed());
+        } else if ("valoracion".equalsIgnoreCase(criterios.getOrdenarPor())) {
+            archivos.sort(Comparator.comparing(this::calcularValoracionPromedio).reversed());
+        }
+    
+        return archivos;
+    }
+    
+    private double calcularValoracionPromedio(Archivo archivo) {
+        return archivo.getComentarios().stream()
+                .mapToInt(Comentario::getValoracion)
+                .average()
+                .orElse(0.0);
     }
 }

@@ -1,5 +1,8 @@
 package com.proyecto.spring.modelos;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +25,15 @@ public class Archivo {
     private byte[] datos;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Column(name = "fecha_subida", nullable = false)
+    private LocalDateTime fechaSubida = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "archivo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentarios;
+
+    private String asignatura;   //materia a la que pertenece el archivo
+    private String nivelEstudio; //nivel educativo (ESO, Bachillerato, Universidad, etc.)
 }

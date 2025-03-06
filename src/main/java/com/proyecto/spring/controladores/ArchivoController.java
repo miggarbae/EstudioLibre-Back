@@ -1,10 +1,9 @@
 package com.proyecto.spring.controladores;
 
-import com.proyecto.spring.modelos.Archivo;
-import com.proyecto.spring.modelos.Usuario;
-import com.proyecto.spring.seguridad.JwtUtil;
-import com.proyecto.spring.servicios.ArchivoService;
-import com.proyecto.spring.servicios.UsuarioService;
+import com.proyecto.spring.dto.ArchivoBusquedaDTO;
+import com.proyecto.spring.modelos.*;
+import com.proyecto.spring.servicios.*;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +62,7 @@ public class ArchivoController {
         }
     }
 
-    // 📌 Obtener archivos subidos por usuario
+    // Obtener archivos subidos por usuario
     @GetMapping("/mis-archivos")
     public ResponseEntity<List<Archivo>> obtenerMisArchivos() {
         String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
@@ -71,6 +70,11 @@ public class ArchivoController {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         return ResponseEntity.ok(archivoService.obtenerArchivosPorUsuario(usuario.getId()));
+    }
+
+    @PostMapping("/buscar")
+    public ResponseEntity<List<Archivo>> buscarArchivos(@RequestBody ArchivoBusquedaDTO criterios) {
+        return ResponseEntity.ok(archivoService.buscarArchivos(criterios));
     }
 }
 
