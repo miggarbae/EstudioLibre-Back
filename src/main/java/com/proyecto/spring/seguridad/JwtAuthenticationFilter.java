@@ -28,38 +28,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println("🔥 JWT Filter ejecutándose para: " + request.getRequestURI());
+        String requestURI = request.getRequestURI();
 
-        String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("⚠️ No hay token en la solicitud.");
+        // 🔥 Excluir rutas públicas del filtro JWT
+        if (requestURI.equals("/api/archivos/todos")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
-        String username = jwtUtil.extractUsername(token);
-        System.out.println("✅ Token detectado. Usuario extraído: " + username);
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtUtil.validateToken(token, userDetails)) {
-                System.out.println("✅ Token válido. Autenticando usuario...");
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("✅ Usuario autenticado correctamente.");
-            } else {
-                System.out.println("❌ Token inválido.");
-            }
+        // 💡 Lógica normal del filtro JWT
+        String token = obtenerToken(request);
+        if (token == null || !jwtUtil.validarToken(token)) {
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        String username = jwtUtil.obtenerUsername(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }
+
+    private String obtenerToken(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+    
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7); // 🔥 Remover "Bearer " para obtener solo el token
+        }
+        return null;
+    }
+    
 }

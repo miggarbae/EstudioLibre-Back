@@ -154,4 +154,8 @@ public class ArchivoService {
                 .average()
                 .orElse(0.0);
     }
+
+    public List<Archivo> obtenerTodosLosArchivos() {
+        return archivoRepository.findAll();
+    }
 }

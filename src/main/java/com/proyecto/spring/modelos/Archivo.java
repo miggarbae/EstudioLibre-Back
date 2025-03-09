@@ -3,6 +3,8 @@ package com.proyecto.spring.modelos;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +27,7 @@ public class Archivo {
     private byte[] datos;
 
     @ManyToOne
+    @JsonIgnore // Evita la recursividad infinita
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
@@ -32,6 +35,7 @@ public class Archivo {
     private LocalDateTime fechaSubida = LocalDateTime.now();
 
     @OneToMany(mappedBy = "archivo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comentario> comentarios;
 
     private String asignatura;   //materia a la que pertenece el archivo

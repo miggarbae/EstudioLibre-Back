@@ -76,5 +76,14 @@ public class ArchivoController {
     public ResponseEntity<List<Archivo>> buscarArchivos(@RequestBody ArchivoBusquedaDTO criterios) {
         return ResponseEntity.ok(archivoService.buscarArchivos(criterios));
     }
+
+    // ✅ Obtener todos los archivos
+    @GetMapping("/todos")
+    public ResponseEntity<List<Archivo>> obtenerTodosLosArchivos() {
+        System.out.println("📌 Método obtenerTodosLosArchivos() llamado"); // 🔥 Agrega esto para depurar
+        List<Archivo> archivos = archivoService.obtenerTodosLosArchivos();
+        System.out.println("📂 Archivos encontrados: " + archivos.size()); // 🔥 Verifica si realmente hay archivos
+        return ResponseEntity.ok(archivos);
+    }
 }
 

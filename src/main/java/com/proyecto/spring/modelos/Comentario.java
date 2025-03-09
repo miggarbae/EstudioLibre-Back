@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -23,6 +25,7 @@ public class Comentario {
 
     @ManyToOne
     @JoinColumn(name = "archivo_id", nullable = false)
+    @JsonIgnore
     private Archivo archivo;  // A qué archivo se refiere el comentario
 
     @Column(nullable = false, length = 1000)
