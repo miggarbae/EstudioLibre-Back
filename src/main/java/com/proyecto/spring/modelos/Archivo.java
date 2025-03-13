@@ -26,6 +26,10 @@ public class Archivo {
     @Lob // Almacena archivos binarios en la BD
     private byte[] datos;
 
+    private String asignatura;   //materia a la que pertenece el archivo
+    private String nivelEstudio; //nivel educativo (ESO, Bachillerato, Universidad, etc.)
+    private String descripcion; //breve descripción del archivo
+
     @ManyToOne
     @JsonIgnore // Evita la recursividad infinita
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -37,7 +41,4 @@ public class Archivo {
     @OneToMany(mappedBy = "archivo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comentario> comentarios;
-
-    private String asignatura;   //materia a la que pertenece el archivo
-    private String nivelEstudio; //nivel educativo (ESO, Bachillerato, Universidad, etc.)
 }

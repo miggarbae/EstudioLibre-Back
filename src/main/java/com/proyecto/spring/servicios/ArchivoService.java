@@ -31,7 +31,7 @@ public class ArchivoService {
     
     private final ArchivoRepository archivoRepository;
 
-    // 🔥 Inyección del repositorio en el constructor
+    // Inyección del repositorio en el constructor
     public ArchivoService(ArchivoRepository archivoRepository) {
         this.archivoRepository = archivoRepository;
     }
@@ -44,29 +44,32 @@ public class ArchivoService {
         "application/rtf"
     );
 
-    public Archivo guardarArchivo(MultipartFile archivo, Usuario usuario) throws IOException {
+    public Archivo guardarArchivo(MultipartFile archivo, Usuario usuario, String descripcion, String asignatura, String nivelEstudio) throws IOException {
         String tipo = archivo.getContentType();
         
         if (!TIPOS_PERMITIDOS.contains(tipo)) {
             throw new IllegalArgumentException("Solo se permiten archivos PDF, Word, TXT y RTF.");
         }
-
+    
         Archivo nuevoArchivo = new Archivo();
         nuevoArchivo.setNombre(archivo.getOriginalFilename());
         nuevoArchivo.setTipo(tipo);
         nuevoArchivo.setDatos(archivo.getBytes());
         nuevoArchivo.setUsuario(usuario);
-        
+        nuevoArchivo.setDescripcion(descripcion);
+        nuevoArchivo.setAsignatura(asignatura);
+        nuevoArchivo.setNivelEstudio(nivelEstudio);
+    
         return archivoRepository.save(nuevoArchivo);
-    }
+    }    
 
     public byte[] convertirArchivoAPDF(Archivo archivo) throws IOException {
         if (archivo.getTipo().equals("application/pdf")) {
-            return archivo.getDatos();  // ✅ Si ya es PDF, no hace falta convertirlo
+            return archivo.getDatos();  // Si ya es PDF, no hace falta convertirlo
         }
     
         String contenido = extraerTexto(archivo);  // 🔍 Extraer texto del archivo
-        System.out.println("Texto extraído: \n" + contenido); // 📌 Debug para verificar si el contenido se extrae bien
+        System.out.println("Texto extraído: \n" + contenido); // Debug para verificar si el contenido se extrae bien
     
         PDDocument document = new PDDocument();
         PDPage page = new PDPage();
@@ -75,10 +78,10 @@ public class ArchivoService {
         try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
             contentStream.setFont(PDType1Font.HELVETICA, 12);
             contentStream.beginText();
-            contentStream.setLeading(14.5f); // 🔥 Ajustar interlineado
-            contentStream.newLineAtOffset(50, 750); // 📍 Ajustar la posición inicial
+            contentStream.setLeading(14.5f); // Ajustar interlineado
+            contentStream.newLineAtOffset(50, 750); // Ajustar la posición inicial
     
-            String[] lineas = contenido.split("\n"); // ✂️ Separar el texto en líneas
+            String[] lineas = contenido.split("\n"); // Separar el texto en líneas
             for (String linea : lineas) {
                 contentStream.showText(linea); 
                 contentStream.newLine(); // ⬇️ Saltar línea para evitar sobreescribir
@@ -96,7 +99,7 @@ public class ArchivoService {
 
     private String extraerTexto(Archivo archivo) throws IOException {
         if (archivo.getTipo().equals("text/plain")) {
-            return new String(archivo.getDatos()); // ✅ Archivos TXT
+            return new String(archivo.getDatos()); // Archivos TXT
         } 
         else if (archivo.getTipo().equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
             // 📝 Extraer texto de archivos DOCX (Word moderno)
@@ -106,7 +109,7 @@ public class ArchivoService {
                 for (XWPFParagraph parrafo : doc.getParagraphs()) {
                     texto.append(parrafo.getText()).append("\n"); // 📝 Agregar salto de línea
                 }
-                return texto.toString().trim(); // 🔥 Eliminar espacios innecesarios
+                return texto.toString().trim(); // Eliminar espacios innecesarios
             }
         } 
         else if (archivo.getTipo().equals("application/msword")) {
@@ -157,5 +160,9 @@ public class ArchivoService {
 
     public List<Archivo> obtenerTodosLosArchivos() {
         return archivoRepository.findAll();
+    }
+
+    public Archivo guardarArchivoEditado(Archivo archivo) {
+        return archivoRepository.save(archivo);
     }
 }

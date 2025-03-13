@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -48,18 +46,30 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable()) // ❌ Lo deshabilitamos aquí porque agregaremos un filtro global de CORS
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir Angular
+                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permitir todos los métodos
+                config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Permitir headers necesarios
+                config.setExposedHeaders(List.of("Authorization")); // Exponer el header Authorization
+                config.setAllowCredentials(true); // Permitir credenciales
+                return config;
+            }))
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/archivos/todos").permitAll() // ruta pública
                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .requestMatchers("/api/**").authenticated() // ✅ Las demás rutas siguen protegidas
+                .requestMatchers(HttpMethod.GET, "/api/archivos/*").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // PERMITIR TODAS LAS SOLICITUDES OPTIONS
+                .requestMatchers(HttpMethod.PUT, "/api/archivos/editar/**").authenticated()
+                .requestMatchers("/api/**").authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+
 }

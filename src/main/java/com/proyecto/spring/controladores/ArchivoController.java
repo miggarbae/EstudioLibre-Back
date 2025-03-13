@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/archivos")
 public class ArchivoController {
@@ -29,19 +32,33 @@ public class ArchivoController {
     }
 
     @PostMapping("/subir")
-    public ResponseEntity<?> subirArchivo(@RequestParam("archivo") MultipartFile archivo) {
+    public ResponseEntity<Map<String, String>> subirArchivo(
+            @RequestParam("archivo") MultipartFile archivo,
+            @RequestParam("descripcion") String descripcion,
+            @RequestParam("asignatura") String asignatura,
+            @RequestParam("nivelEstudio") String nivelEstudio) {
+        
         try {
+            // Obtener el usuario autenticado
             String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-            Usuario usuario = usuarioService.findByUsername(username).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            Usuario usuario = usuarioService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            Archivo archivoGuardado = archivoService.guardarArchivo(archivo, usuario);
-            return ResponseEntity.ok("Archivo subido exitosamente con ID: " + archivoGuardado.getId());
+            // Guardar el archivo con la descripción, asignatura y nivel de estudios
+            Archivo archivoGuardado = archivoService.guardarArchivo(archivo, usuario, descripcion, asignatura, nivelEstudio);
+
+            // Devolver respuesta en JSON
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Archivo subido exitosamente");
+            response.put("archivoId", archivoGuardado.getId().toString());
+
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir el archivo.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Error al subir el archivo."));
         }
     }
+
 
     @GetMapping("/descargar/{id}")
     public ResponseEntity<?> descargarArchivo(@PathVariable Long id) {
@@ -77,7 +94,7 @@ public class ArchivoController {
         return ResponseEntity.ok(archivoService.buscarArchivos(criterios));
     }
 
-    // ✅ Obtener todos los archivos
+    // Obtener todos los archivos
     @GetMapping("/todos")
     public ResponseEntity<List<Archivo>> obtenerTodosLosArchivos() {
         System.out.println("📌 Método obtenerTodosLosArchivos() llamado"); // 🔥 Agrega esto para depurar
@@ -85,5 +102,37 @@ public class ArchivoController {
         System.out.println("📂 Archivos encontrados: " + archivos.size()); // 🔥 Verifica si realmente hay archivos
         return ResponseEntity.ok(archivos);
     }
+
+    // Ruta para actualizar asignatura y nivel de un archivo
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> editarArchivo(@PathVariable Long id, @RequestBody Archivo archivoActualizado) {
+        Optional<Archivo> archivoOpt = archivoService.obtenerArchivo(id);
+
+        if (archivoOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", "Archivo no encontrado."));
+        }
+
+        Archivo archivo = archivoOpt.get();
+        archivo.setAsignatura(archivoActualizado.getAsignatura());
+        archivo.setNivelEstudio(archivoActualizado.getNivelEstudio());
+        archivoService.guardarArchivoEditado(archivo);
+
+        // 📌 Retornar un objeto JSON con un mensaje de éxito
+        return ResponseEntity.ok(Map.of("mensaje", "Archivo actualizado correctamente."));
+    }
+
+
+    // Ruta para obtener un archivo por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> obtenerArchivo(@PathVariable Long id) {
+        Optional<Archivo> archivoOpt = archivoService.obtenerArchivo(id);
+
+        if (archivoOpt.isPresent()) {
+            return ResponseEntity.ok(archivoOpt.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Archivo no encontrado.");
+        }
+    }
+
 }
 
