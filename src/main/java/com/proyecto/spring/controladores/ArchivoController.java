@@ -85,10 +85,33 @@ public class ArchivoController {
         return ResponseEntity.ok(archivoService.obtenerArchivosPorUsuario(usuario.getId()));
     }
 
+    //Buscar archivos
     @PostMapping("/buscar")
     public ResponseEntity<List<Archivo>> buscarArchivos(@RequestBody ArchivoBusquedaDTO criterios) {
-        return ResponseEntity.ok(archivoService.buscarArchivos(criterios));
+        System.out.println("🔍 Búsqueda recibida: " + criterios.getNombre()); 
+    
+        List<Archivo> resultados = archivoService.buscarArchivos(criterios.getNombre());
+        System.out.println("📂 Archivos encontrados: " + resultados.size());
+    
+        return ResponseEntity.ok(resultados);
     }
+    
+
+    // @GetMapping("/buscar")
+    // public ResponseEntity<List<Archivo>> buscarArchivos(
+    //         @RequestParam(required = false) String nombre,
+    //         @RequestParam(required = false) String asignatura,
+    //         @RequestParam(required = false) String nivelEstudio,
+    //         @RequestParam(required = false) String ordenarPor) {
+
+    //     ArchivoBusquedaDTO criterios = new ArchivoBusquedaDTO();
+    //     criterios.setNombre(nombre);
+    //     criterios.setAsignatura(asignatura);
+    //     criterios.setNivelEstudio(nivelEstudio);
+    //     criterios.setOrdenarPor(ordenarPor);
+
+    //     return ResponseEntity.ok(archivoService.buscarArchivos(criterios));
+    // }
 
     // Obtener todos los archivos
     @GetMapping("/todos")
