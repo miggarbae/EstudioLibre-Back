@@ -19,15 +19,6 @@ public class Comentario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;  // Quién hizo el comentario
-
-    @ManyToOne
-    @JoinColumn(name = "archivo_id", nullable = false)
-    @JsonIgnore
-    private Archivo archivo;  // A qué archivo se refiere el comentario
-
     @Column(nullable = false, length = 1000)
     private String texto;  // Contenido del comentario
 
@@ -36,5 +27,14 @@ public class Comentario {
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;  // Fecha del comentario
+    
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;  // Quién hizo el comentario
+
+    @ManyToOne
+    @JoinColumn(name = "archivo_id", nullable = false)
+    @JsonIgnore
+    private Archivo archivo;  // A qué archivo se refiere el comentario
 }
 

@@ -30,13 +30,13 @@ public class Archivo {
     private String nivelEstudio; //nivel educativo (ESO, Bachillerato, Universidad, etc.)
     private String descripcion; //breve descripción del archivo
 
+    @Column(name = "fecha_subida", nullable = false)
+    private LocalDateTime fechaSubida = LocalDateTime.now();
+    
     @ManyToOne
     @JsonIgnore // Evita la recursividad infinita
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
-
-    @Column(name = "fecha_subida", nullable = false)
-    private LocalDateTime fechaSubida = LocalDateTime.now();
 
     @OneToMany(mappedBy = "archivo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

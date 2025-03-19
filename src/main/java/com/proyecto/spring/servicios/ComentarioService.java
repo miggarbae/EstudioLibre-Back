@@ -21,7 +21,7 @@ public class ComentarioService {
         this.archivoRepository = archivoRepository;
     }
 
-    // 📌 Obtener comentarios de un archivo (DEVUELVE DTOs)
+    // Obtener comentarios de un archivo (DEVUELVE DTOs)
     public List<ComentarioDTO> obtenerComentariosDeArchivo(Long archivoId) {
         return comentarioRepository.findByArchivoId(archivoId)
                 .stream()
@@ -36,7 +36,7 @@ public class ComentarioService {
                 .collect(Collectors.toList());
     }
 
-    // 📌 Agregar un comentario a un archivo
+    // Agregar un comentario a un archivo
     public ComentarioDTO agregarComentario(Long archivoId, Usuario usuario, String texto, int valoracion) {
         if (valoracion < 1 || valoracion > 5) {
             throw new IllegalArgumentException("La valoración debe estar entre 1 y 5.");
@@ -64,7 +64,7 @@ public class ComentarioService {
         );
     }
 
-    // 📌 Editar comentario (solo el autor puede hacerlo)
+    // Editar comentario (solo el autor puede hacerlo)
     public Comentario editarComentario(Long comentarioId, Usuario usuario, String nuevoTexto, int nuevaValoracion) {
         Comentario comentario = comentarioRepository.findById(comentarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));

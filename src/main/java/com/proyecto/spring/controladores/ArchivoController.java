@@ -59,25 +59,21 @@ public class ArchivoController {
         }
     }
 
-
-    @GetMapping("/descargar/{id}")
+    @GetMapping("/descarga/{id}")
     public ResponseEntity<?> descargarArchivo(@PathVariable Long id) {
         Optional<Archivo> archivoOpt = archivoService.obtenerArchivo(id);
-
+    
         if (archivoOpt.isPresent()) {
             Archivo archivo = archivoOpt.get();
-            try {
-                byte[] pdfData = archivoService.convertirArchivoAPDF(archivo);
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + ".pdf\"")
-                        .body(pdfData);
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al convertir el archivo a PDF.");
-            }
+    
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, archivo.getTipo()) // Mantener el tipo original
+                    .body(archivo.getDatos()); // Devolver los datos sin modificar
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Archivo no encontrado.");
         }
-    }
+    }    
 
     // Obtener archivos subidos por usuario
     @GetMapping("/mis-archivos")
@@ -97,9 +93,9 @@ public class ArchivoController {
     // Obtener todos los archivos
     @GetMapping("/todos")
     public ResponseEntity<List<Archivo>> obtenerTodosLosArchivos() {
-        System.out.println("📌 Método obtenerTodosLosArchivos() llamado"); // 🔥 Agrega esto para depurar
+        System.out.println("Método obtenerTodosLosArchivos() llamado"); // Agrega esto para depurar
         List<Archivo> archivos = archivoService.obtenerTodosLosArchivos();
-        System.out.println("📂 Archivos encontrados: " + archivos.size()); // 🔥 Verifica si realmente hay archivos
+        System.out.println("Archivos encontrados: " + archivos.size()); // Verifica si realmente hay archivos
         return ResponseEntity.ok(archivos);
     }
 
@@ -117,7 +113,7 @@ public class ArchivoController {
         archivo.setNivelEstudio(archivoActualizado.getNivelEstudio());
         archivoService.guardarArchivoEditado(archivo);
 
-        // 📌 Retornar un objeto JSON con un mensaje de éxito
+        // Retornar un objeto JSON con un mensaje de éxito
         return ResponseEntity.ok(Map.of("mensaje", "Archivo actualizado correctamente."));
     }
 
