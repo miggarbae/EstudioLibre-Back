@@ -1,9 +1,6 @@
 package com.proyecto.spring.servicios;
 
-import com.proyecto.spring.dto.ArchivoBusquedaDTO;
 import com.proyecto.spring.modelos.Archivo;
-import com.proyecto.spring.modelos.Comentario;
-// import com.proyecto.spring.modelos.Comentario;
 import com.proyecto.spring.modelos.Usuario;
 import com.proyecto.spring.repositorios.ArchivoRepository;
 
@@ -64,13 +61,12 @@ public class ArchivoService {
         return archivoRepository.buscarArchivos(termino);
     }
 
-    
-    private double calcularValoracionPromedio(Archivo archivo) {
-        return archivo.getComentarios().stream()
-                .mapToInt(Comentario::getValoracion)
-                .average()
-                .orElse(0.0);
-    }
+    // private double calcularValoracionPromedio(Archivo archivo) {
+    //     return archivo.getComentarios().stream()
+    //             .mapToInt(Comentario::getValoracion)
+    //             .average()
+    //             .orElse(0.0);
+    // }
 
     public List<Archivo> obtenerTodosLosArchivos() {
         return archivoRepository.findAll();

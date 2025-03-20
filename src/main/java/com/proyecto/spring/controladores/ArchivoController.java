@@ -96,7 +96,6 @@ public class ArchivoController {
         return ResponseEntity.ok(resultados);
     }
     
-
     // @GetMapping("/buscar")
     // public ResponseEntity<List<Archivo>> buscarArchivos(
     //         @RequestParam(required = false) String nombre,
@@ -116,7 +115,7 @@ public class ArchivoController {
     // Obtener todos los archivos
     @GetMapping("/todos")
     public ResponseEntity<List<Archivo>> obtenerTodosLosArchivos() {
-        System.out.println("Método obtenerTodosLosArchivos() llamado"); // Agrega esto para depurar
+        System.out.println("Método obtenerTodosLosArchivos() llamado"); // esto es para depurar sin funciona
         List<Archivo> archivos = archivoService.obtenerTodosLosArchivos();
         System.out.println("Archivos encontrados: " + archivos.size()); // Verifica si realmente hay archivos
         return ResponseEntity.ok(archivos);

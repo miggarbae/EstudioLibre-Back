@@ -3,6 +3,8 @@ package com.proyecto.spring.controladores;
 import com.proyecto.spring.modelos.*;
 import com.proyecto.spring.seguridad.*;
 import com.proyecto.spring.servicios.*;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,10 +50,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Usuario usuario) {
-        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
-            usuario.setRoles(Set.of(Rol.USER)); // 💡 Asegurar que tenga al menos un rol
+        if (usuarioService.findByUsername(usuario.getUsername()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("mensaje", "El usuario ya existe"));
         }
+
+        usuario.setRoles(Set.of(Rol.USER)); // Asegurar que tenga al menos un rol
         Usuario savedUser = usuarioService.save(usuario);
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(Map.of("mensaje", "Usuario registrado exitosamente"));
     }
+
 }
