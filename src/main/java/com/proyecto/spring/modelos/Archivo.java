@@ -3,6 +3,7 @@ package com.proyecto.spring.modelos;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -23,22 +24,23 @@ public class Archivo {
     private String nombre;
     private String tipo;
 
-    @Lob // Almacena archivos binarios en la BD
+    @Lob
     private byte[] datos;
 
-    private String asignatura;   //materia a la que pertenece el archivo
-    private String nivelEstudio; //nivel educativo (ESO, Bachillerato, Universidad, etc.)
-    private String descripcion; //breve descripción del archivo
+    private String asignatura;
+    private String nivelEstudio;
+    private String descripcion;
 
     @Column(name = "fecha_subida", nullable = false)
     private LocalDateTime fechaSubida = LocalDateTime.now();
-    
+
     @ManyToOne
-    @JsonIgnore // Evita la recursividad infinita
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonBackReference
     private Usuario usuario;
 
     @OneToMany(mappedBy = "archivo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Comentario> comentarios;
 }
+

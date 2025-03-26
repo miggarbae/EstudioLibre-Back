@@ -66,14 +66,16 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/archivos/editar/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/comentarios/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // PERMITIR TODAS LAS SOLICITUDES OPTIONS
-                
+                .requestMatchers(HttpMethod.GET, "/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/reportes").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/reportes").hasAuthority("USER")
+
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
 }

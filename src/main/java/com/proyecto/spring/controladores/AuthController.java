@@ -43,10 +43,17 @@ public class AuthController {
             return ResponseEntity.status(403).body("Error de autenticación: " + e.getMessage());
         }
 
-        String token = jwtUtil.generateToken(((User) authentication.getPrincipal()).getUsername());
-        System.out.println("Autenticación exitosa, token generado.");
+        User user = (User) authentication.getPrincipal();
+        String username = user.getUsername();
+        String role = user.getAuthorities().stream().findFirst().get().getAuthority(); // obtiene el primer rol
+
+        // Generar token con username y role
+        String token = jwtUtil.generateToken(username, role);
+
+        System.out.println("Autenticación exitosa, token generado con rol: " + role);
         return ResponseEntity.ok(Map.of("token", token));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Usuario usuario) {
