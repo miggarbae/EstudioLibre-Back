@@ -114,11 +114,8 @@ public class ArchivoController {
 
     // Obtener todos los archivos
     @GetMapping("/todos")
-    public ResponseEntity<List<Archivo>> obtenerTodosLosArchivos() {
-        System.out.println("Método obtenerTodosLosArchivos() llamado"); // esto es para depurar sin funciona
-        List<Archivo> archivos = archivoService.obtenerTodosLosArchivos();
-        System.out.println("Archivos encontrados: " + archivos.size()); // Verifica si realmente hay archivos
-        return ResponseEntity.ok(archivos);
+    public ResponseEntity<List<Archivo>> obtenerArchivosVisibles() {
+        return ResponseEntity.ok(archivoService.obtenerArchivosVisibles());
     }
 
     // Ruta para actualizar asignatura y nivel de un archivo

@@ -21,5 +21,16 @@ public interface ArchivoRepository extends JpaRepository<Archivo, Long> {
             OR LOWER(a.descripcion) LIKE LOWER(CONCAT('%', :termino, '%')))
     """)
     List<Archivo> buscarArchivos(@Param("termino") String termino);
+    
+    @Query("SELECT a FROM Archivo a WHERE a.visible = true")
+    List<Archivo> obtenerArchivosVisibles();
 
+    @Query("""
+        SELECT a FROM Archivo a
+        WHERE a.visible = true AND (
+            LOWER(a.nombre) LIKE LOWER(CONCAT('%', :termino, '%'))
+            OR LOWER(a.usuario.username) LIKE LOWER(CONCAT('%', :termino, '%'))
+        )
+    """)
+    List<Archivo> buscarPorNombreOUsuario(@Param("termino") String termino);
 }

@@ -25,6 +25,9 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String email;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)

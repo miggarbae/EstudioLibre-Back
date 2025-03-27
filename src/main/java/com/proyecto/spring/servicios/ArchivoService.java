@@ -75,4 +75,9 @@ public class ArchivoService {
     public Archivo guardarArchivoEditado(Archivo archivo) {
         return archivoRepository.save(archivo);
     }
+
+    public List<Archivo> obtenerArchivosVisibles() {
+        return archivoRepository.obtenerArchivosVisibles();
+    }
+    
 }

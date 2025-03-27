@@ -34,6 +34,9 @@ public class Archivo {
     @Column(name = "fecha_subida", nullable = false)
     private LocalDateTime fechaSubida = LocalDateTime.now();
 
+    @Column(name = "visible", nullable = false)
+    private boolean visible = true; // Por defecto, los archivos son visibles, esta variable es para ocultarlos sin borrarlos los archivos
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     @JsonBackReference
