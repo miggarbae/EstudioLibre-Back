@@ -31,7 +31,7 @@ public class AdminController {
             Map<String, Object> datos = new HashMap<>();
             datos.put("id", u.getId());
             datos.put("username", u.getUsername());
-            datos.put("roles", u.getRoles());
+            datos.put("roles", u.getRol());
             datos.put("archivos", u.getArchivos());
             resultado.add(datos);
         }
@@ -45,11 +45,11 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/usuarios/{id}/roles")
-    public ResponseEntity<?> actualizarRoles(@PathVariable Long id, @RequestBody Set<Rol> nuevosRoles) {
+    @PutMapping("/usuarios/{id}/rol")
+    public ResponseEntity<?> actualizarRol(@PathVariable Long id, @RequestBody Rol nuevoRol) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setRoles(nuevosRoles);
+        usuario.setRol(nuevoRol);
         usuarioRepository.save(usuario);
         return ResponseEntity.ok().build();
     }

@@ -46,4 +46,3 @@ public class Archivo {
     @JsonIgnore
     private List<Comentario> comentarios;
 }
-

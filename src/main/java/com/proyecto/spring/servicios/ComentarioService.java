@@ -89,4 +89,23 @@ public class ComentarioService {
 
         comentarioRepository.delete(comentario);
     }
+
+    // Obtener la valoración de un usuario para un archivo
+    public int obtenerValoracionUsuario(Long archivoId, Usuario usuario) {
+        return comentarioRepository.findByArchivoIdAndUsuarioId(archivoId, usuario.getId())
+                .map(Comentario::getValoracion)
+                .orElse(0); // 0 si no ha valorado
+    }
+
+    // Obtener la valoración media de un archivo
+    public double obtenerValoracionMedia(Long archivoId) {
+        List<Comentario> comentarios = comentarioRepository.findByArchivoId(archivoId);
+        if (comentarios.isEmpty()) return 0;
+
+        double suma = comentarios.stream()
+                .mapToInt(Comentario::getValoracion)
+                .sum();
+
+        return (double) suma / comentarios.size();
+    }
 }

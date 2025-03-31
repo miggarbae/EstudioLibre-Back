@@ -75,4 +75,22 @@ public class ComentarioController {
         
         return ResponseEntity.ok(response);
     }
+
+    // Obtener la valoración del usuario actual para un archivo
+    @GetMapping("/valoracion/{archivoId}")
+    public ResponseEntity<Integer> obtenerValoracionUsuario(@PathVariable Long archivoId) {
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Usuario usuario = usuarioService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        int valoracion = comentarioService.obtenerValoracionUsuario(archivoId, usuario);
+        return ResponseEntity.ok(valoracion);
+    }
+
+    // Obtener la valoración media de un archivo
+    @GetMapping("/valoracion-media/{archivoId}")
+    public ResponseEntity<Double> obtenerValoracionMedia(@PathVariable Long archivoId) {
+        double media = comentarioService.obtenerValoracionMedia(archivoId);
+        return ResponseEntity.ok(media);
+    }
 }

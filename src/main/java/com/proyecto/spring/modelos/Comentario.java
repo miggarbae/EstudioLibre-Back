@@ -37,4 +37,3 @@ public class Comentario {
     @JsonIgnore
     private Archivo archivo;  // A qué archivo se refiere el comentario
 }
-

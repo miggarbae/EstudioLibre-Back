@@ -26,15 +26,13 @@ public class Usuario {
     private String password;
 
     @Column(nullable = false)
-    private String email;
+    private String email ="usuario@gmail.com";
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Rol> roles;
+    @Column(nullable = false)
+    private Rol rol = Rol.USER;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Archivo> archivos;
 }
-

@@ -23,11 +23,10 @@ public class UsuarioService {
     }
 
     public Usuario save(Usuario usuario) {
-        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
-            usuario.setRoles(Set.of(Rol.USER)); // Asigno USER por defecto
+        if (usuario.getRol() == null) {
+            usuario.setRol(Rol.USER);
         }
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
-    
 }

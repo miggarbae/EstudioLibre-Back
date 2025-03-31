@@ -61,9 +61,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("mensaje", "El usuario ya existe"));
         }
 
-        usuario.setRoles(Set.of(Rol.USER)); // Asegurar que tenga al menos un rol
+        usuario.setRol(Rol.USER); // Asegurar que tenga al menos un rol
         Usuario savedUser = usuarioService.save(usuario);
         return ResponseEntity.ok(Map.of("mensaje", "Usuario registrado exitosamente"));
     }
-
 }

@@ -79,5 +79,4 @@ public class ArchivoService {
     public List<Archivo> obtenerArchivosVisibles() {
         return archivoRepository.obtenerArchivosVisibles();
     }
-    
 }
