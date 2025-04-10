@@ -3,10 +3,7 @@ package com.proyecto.spring.controladores;
 import com.proyecto.spring.modelos.Usuario;
 import com.proyecto.spring.servicios.UsuarioService;
 
-import org.springframework.core.io.UrlResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +26,7 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
-    private static final String DIRECTORIO_IMAGENES = System.getProperty("user.dir") + "/uploads/perfiles/";
+    private static final String DIRECTORIO_IMAGENES = "uploads/perfiles/";
 
     public UsuarioController(UsuarioService usuarioService, PasswordEncoder passwordEncoder) {
         this.usuarioService = usuarioService;
@@ -107,10 +103,10 @@ public class UsuarioController {
             Files.createDirectories(rutaArchivo.getParent());
             Files.copy(imagen.getInputStream(), rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
     
-            usuario.setRutaImagenPerfil(rutaArchivo.toString());
+            usuario.setRutaImagenPerfil("/perfiles/" + nombreArchivo);
             usuarioService.save(usuario);
     
-            // ✅ Devolver respuesta en formato JSON
+            // Devolver respuesta en formato JSON
             return ResponseEntity.ok().body(Map.of(
                 "mensaje", "Imagen subida exitosamente",
                 "ruta", rutaArchivo.toString()
@@ -122,23 +118,23 @@ public class UsuarioController {
         }
     }    
 
-    // Endpoint para obtener la imagen de perfil
-    @GetMapping("/{id}/imagen")
-    public ResponseEntity<Resource> obtenerImagen(@PathVariable Long id) {
-        Usuario usuario = usuarioService.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        Path rutaArchivo = Paths.get(usuario.getRutaImagenPerfil());
-        Resource recurso;
-        try {
-            recurso = new UrlResource(rutaArchivo.toUri());
-            if (recurso.exists() || recurso.isReadable()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .body(recurso);
-            } else {
-                throw new RuntimeException("No se pudo leer el archivo");
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error al obtener la imagen", e);
-        }
-    }
+    // // Endpoint para obtener la imagen de perfil
+    // @GetMapping("/{id}/imagen")
+    // public ResponseEntity<Resource> obtenerImagen(@PathVariable Long id) {
+    //     Usuario usuario = usuarioService.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    //     Path rutaArchivo = Paths.get(usuario.getRutaImagenPerfil());
+    //     Resource recurso;
+    //     try {
+    //         recurso = new UrlResource(rutaArchivo.toUri());
+    //         if (recurso.exists() || recurso.isReadable()) {
+    //             return ResponseEntity.ok()
+    //                     .contentType(MediaType.IMAGE_JPEG)
+    //                     .body(recurso);
+    //         } else {
+    //             throw new RuntimeException("No se pudo leer el archivo");
+    //         }
+    //     } catch (MalformedURLException e) {
+    //         throw new RuntimeException("Error al obtener la imagen", e);
+    //     }
+    // }
 }

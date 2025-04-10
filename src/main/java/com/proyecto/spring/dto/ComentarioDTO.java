@@ -5,14 +5,16 @@ import java.time.LocalDateTime;
 public class ComentarioDTO {
     private Long id;
     private String usuario;
+    private String imagenUsuario; // nueva propiedad
     private Long archivoId;
     private String texto;
     private int valoracion;
     private LocalDateTime fechaCreacion;
 
-    public ComentarioDTO(Long id, String usuario, Long archivoId, String texto, int valoracion, LocalDateTime fechaCreacion) {
+    public ComentarioDTO(Long id, String usuario, String imagenUsuario, Long archivoId, String texto, int valoracion, LocalDateTime fechaCreacion) {
         this.id = id;
         this.usuario = usuario;
+        this.imagenUsuario = imagenUsuario;
         this.archivoId = archivoId;
         this.texto = texto;
         this.valoracion = valoracion;
@@ -22,6 +24,8 @@ public class ComentarioDTO {
     // Getters y Setters
     public Long getId() { return id; }
     public String getUsuario() { return usuario; }
+    public String getImagenUsuario() { return imagenUsuario; }
+    public void setImagenUsuario(String imagenUsuario) { this.imagenUsuario = imagenUsuario; }
     public Long getArchivoId() { return archivoId; }
     public String getTexto() { return texto; }
     public int getValoracion() { return valoracion; }

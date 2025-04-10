@@ -27,7 +27,8 @@ public class ComentarioService {
                 .stream()
                 .map(c -> new ComentarioDTO(
                         c.getId(),
-                        c.getUsuario().getUsername(),  // Solo enviamos el nombre del usuario
+                        c.getUsuario().getUsername(),
+                        c.getUsuario().getRutaImagenPerfil(),  // Nueva línea
                         c.getArchivo().getId(),
                         c.getTexto(),
                         c.getValoracion(),
@@ -57,6 +58,7 @@ public class ComentarioService {
         return new ComentarioDTO(
                 comentario.getId(),
                 usuario.getUsername(),
+                usuario.getRutaImagenPerfil(),  // Nueva línea
                 archivo.getId(),
                 comentario.getTexto(),
                 comentario.getValoracion(),
@@ -64,7 +66,6 @@ public class ComentarioService {
         );
     }
 
-    // Editar comentario (solo el autor puede hacerlo)
     public Comentario editarComentario(Long comentarioId, Usuario usuario, String nuevoTexto, int nuevaValoracion) {
         Comentario comentario = comentarioRepository.findById(comentarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
@@ -78,7 +79,6 @@ public class ComentarioService {
         return comentarioRepository.save(comentario);
     }
 
-    // 📌 Eliminar comentario (solo el autor puede hacerlo)
     public void eliminarComentario(Long comentarioId, Usuario usuario) {
         Comentario comentario = comentarioRepository.findById(comentarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
@@ -90,14 +90,12 @@ public class ComentarioService {
         comentarioRepository.delete(comentario);
     }
 
-    // Obtener la valoración de un usuario para un archivo
     public int obtenerValoracionUsuario(Long archivoId, Usuario usuario) {
         return comentarioRepository.findByArchivoIdAndUsuarioId(archivoId, usuario.getId())
                 .map(Comentario::getValoracion)
-                .orElse(0); // 0 si no ha valorado
+                .orElse(0);
     }
 
-    // Obtener la valoración media de un archivo
     public double obtenerValoracionMedia(Long archivoId) {
         List<Comentario> comentarios = comentarioRepository.findByArchivoId(archivoId);
         if (comentarios.isEmpty()) return 0;

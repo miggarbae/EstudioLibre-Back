@@ -37,4 +37,15 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Archivo> archivos;
+
+    // tranforma la ruta real en dusco en una ruta accesible via http
+    // por ejemplo: /perfiles/imagen.jpg
+    public String getRutaImagenPerfil() {
+        if (rutaImagenPerfil != null && !rutaImagenPerfil.isEmpty()) {
+            String nombreArchivo = new java.io.File(rutaImagenPerfil).getName();
+            return "/perfiles/" + nombreArchivo;
+        }
+        return null;
+    }
+    
 }

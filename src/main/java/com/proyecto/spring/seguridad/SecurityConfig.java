@@ -58,12 +58,13 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/perfiles/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/imagen").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/*/imagen").authenticated()
-                
+
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/imagen").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/*/imagen").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/perfil").authenticated()
