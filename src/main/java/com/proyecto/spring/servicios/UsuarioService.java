@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UsuarioService {
@@ -22,11 +21,25 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username);
     }
 
+    public Optional<Usuario> findById(Long id) {
+        return usuarioRepository.findById(id);
+    }
+
     public Usuario save(Usuario usuario) {
         if (usuario.getRol() == null) {
             usuario.setRol(Rol.USER);
         }
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
+    }
+
+    // Método para guardar un usuario sin encriptar la contraseña
+    public Usuario saveDirect(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    // Método para eliminar un usuario
+    public void eliminarUsuario(Usuario usuario) {
+        usuarioRepository.delete(usuario);
     }
 }

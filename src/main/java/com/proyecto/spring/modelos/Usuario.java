@@ -26,11 +26,13 @@ public class Usuario {
     private String password;
 
     @Column(nullable = false)
-    private String email ="usuario@gmail.com";
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol = Rol.USER;
+
+    private String rutaImagenPerfil;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
