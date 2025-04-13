@@ -13,13 +13,14 @@ public class DataLoader {
     @Bean
     public CommandLineRunner cargarUsuarios(UsuarioService usuarioService) {
         return args -> {
-            if (usuarioService.findByUsername("usuario1").isEmpty()) {
+            if (usuarioService.findByUsername("admin").isEmpty()) {
                 Usuario usuario = new Usuario();
-                usuario.setUsername("usuario1");
-                usuario.setPassword("1234"); // Se encripta automáticamente en UsuarioService
+                usuario.setUsername("admin");
+                usuario.setPassword("admin"); // Se encripta automáticamente en UsuarioService
                 usuario.setRol(Rol.ADMIN);
+                usuario.setEmail("admin@prueba.com");
                 usuarioService.save(usuario);
-                System.out.println("Usuario de prueba creado: usuario1 / 1234");
+                System.out.println("Usuario de prueba creado: admin / admin");
             }
         };
     }

@@ -116,25 +116,5 @@ public class UsuarioController {
                 Map.of("error", "Error al subir la imagen")
             );
         }
-    }    
-
-    // // Endpoint para obtener la imagen de perfil
-    // @GetMapping("/{id}/imagen")
-    // public ResponseEntity<Resource> obtenerImagen(@PathVariable Long id) {
-    //     Usuario usuario = usuarioService.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-    //     Path rutaArchivo = Paths.get(usuario.getRutaImagenPerfil());
-    //     Resource recurso;
-    //     try {
-    //         recurso = new UrlResource(rutaArchivo.toUri());
-    //         if (recurso.exists() || recurso.isReadable()) {
-    //             return ResponseEntity.ok()
-    //                     .contentType(MediaType.IMAGE_JPEG)
-    //                     .body(recurso);
-    //         } else {
-    //             throw new RuntimeException("No se pudo leer el archivo");
-    //         }
-    //     } catch (MalformedURLException e) {
-    //         throw new RuntimeException("Error al obtener la imagen", e);
-    //     }
-    // }
+    }
 }

@@ -61,13 +61,6 @@ public class ArchivoService {
         return archivoRepository.buscarArchivos(termino);
     }
 
-    // private double calcularValoracionPromedio(Archivo archivo) {
-    //     return archivo.getComentarios().stream()
-    //             .mapToInt(Comentario::getValoracion)
-    //             .average()
-    //             .orElse(0.0);
-    // }
-
     public List<Archivo> obtenerTodosLosArchivos() {
         return archivoRepository.findAll();
     }
@@ -79,4 +72,8 @@ public class ArchivoService {
     public List<Archivo> obtenerArchivosVisibles() {
         return archivoRepository.obtenerArchivosVisibles();
     }
+
+    public void eliminarArchivoPorId(Long id) {
+        archivoRepository.deleteById(id);
+    }    
 }

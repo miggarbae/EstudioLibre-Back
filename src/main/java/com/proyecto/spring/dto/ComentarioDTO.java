@@ -1,14 +1,18 @@
 package com.proyecto.spring.dto;
 
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ComentarioDTO {
     private Long id;
     private String usuario;
     private String imagenUsuario; // nueva propiedad
     private Long archivoId;
     private String texto;
-    private int valoracion;
+    private Integer valoracion;
     private LocalDateTime fechaCreacion;
 
     public ComentarioDTO(Long id, String usuario, String imagenUsuario, Long archivoId, String texto, int valoracion, LocalDateTime fechaCreacion) {
@@ -21,13 +25,5 @@ public class ComentarioDTO {
         this.fechaCreacion = fechaCreacion;
     }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public String getUsuario() { return usuario; }
-    public String getImagenUsuario() { return imagenUsuario; }
     public void setImagenUsuario(String imagenUsuario) { this.imagenUsuario = imagenUsuario; }
-    public Long getArchivoId() { return archivoId; }
-    public String getTexto() { return texto; }
-    public int getValoracion() { return valoracion; }
-    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
 }

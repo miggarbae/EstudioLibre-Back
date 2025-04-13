@@ -47,6 +47,19 @@ public class ComentarioController {
         return ResponseEntity.ok(nuevoComentario);
     }
 
+    @PostMapping("/valorar/{archivoId}")
+    public ResponseEntity<Void> valorarArchivo(
+            @PathVariable Long archivoId,
+            @RequestParam int valoracion
+    ) {
+        String username = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Usuario usuario = usuarioService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        comentarioService.valorarArchivo(archivoId, usuario, valoracion);
+        return ResponseEntity.ok().build();
+    }
+
     // Editar comentario (solo el autor puede hacerlo)
     @PutMapping("/{comentarioId}")
     public ResponseEntity<Comentario> editarComentario(@PathVariable Long comentarioId,

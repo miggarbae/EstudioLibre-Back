@@ -120,7 +120,6 @@ public class ArchivoController {
         return ResponseEntity.ok(Map.of("mensaje", "Archivo actualizado correctamente."));
     }
 
-
     // Ruta para obtener un archivo por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerArchivo(@PathVariable Long id) {
@@ -131,5 +130,18 @@ public class ArchivoController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Archivo no encontrado.");
         }
+    }
+
+    // Ruta para eliminar un archivo por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarArchivo(@PathVariable Long id) {
+        Optional<Archivo> archivoOpt = archivoService.obtenerArchivo(id);
+
+        if (archivoOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Archivo no encontrado.");
+        }
+
+        archivoService.eliminarArchivoPorId(id);
+        return ResponseEntity.ok(Map.of("mensaje", "Archivo eliminado correctamente."));
     }
 }

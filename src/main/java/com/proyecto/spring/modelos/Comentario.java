@@ -22,8 +22,8 @@ public class Comentario {
     @Column(nullable = false, length = 1000)
     private String texto;  // Contenido del comentario
 
-    @Column(nullable = false)
-    private int valoracion;  // Puntuación (1 a 5)
+    @Column(nullable = true)
+    private Integer valoracion;  // Puntuación (1 a 5)
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;  // Fecha del comentario
