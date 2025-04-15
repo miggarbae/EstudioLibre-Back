@@ -33,11 +33,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    // Método para guardar un usuario sin encriptar la contraseña
-    public Usuario saveDirect(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
-
     // Método para eliminar un usuario
     public void eliminarUsuario(Usuario usuario) {
         usuarioRepository.delete(usuario);
