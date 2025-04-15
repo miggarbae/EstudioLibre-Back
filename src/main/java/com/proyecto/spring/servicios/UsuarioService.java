@@ -2,12 +2,16 @@ package com.proyecto.spring.servicios;
 
 import com.proyecto.spring.modelos.*;
 import com.proyecto.spring.repositorios.*;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -29,7 +33,12 @@ public class UsuarioService {
         if (usuario.getRol() == null) {
             usuario.setRol(Rol.USER);
         }
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
+        // Solo encriptar si la contraseña NO está ya encriptada
+        if (usuario.getPassword() != null && !usuario.getPassword().startsWith("$2a$")) {
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        }
+
         return usuarioRepository.save(usuario);
     }
 
@@ -37,4 +46,9 @@ public class UsuarioService {
     public void eliminarUsuario(Usuario usuario) {
         usuarioRepository.delete(usuario);
     }
+
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+    
 }

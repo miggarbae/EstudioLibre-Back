@@ -53,32 +53,40 @@ public class UsuarioController {
                                               @RequestParam(required = false) String username,
                                               @RequestParam(required = false) String email,
                                               @RequestParam(required = false) String password) {
-
+    
         Optional<Usuario> usuarioOpt = usuarioService.findByUsername(userDetails.getUsername());
-
         if (usuarioOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
+    
         Usuario usuario = usuarioOpt.get();
-
+    
+        // Verificar si el nuevo nombre de usuario ya existe en otro usuario
         if (username != null && !username.equals(usuario.getUsername())) {
+            if (usuarioService.findByUsername(username).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("campo", "username", "mensaje", "Este nombre de usuario ya está en uso."));
+            }
             usuario.setUsername(username);
         }
-
+    
+        // Verificar si el nuevo email ya existe en otro usuario
         if (email != null && !email.equals(usuario.getEmail())) {
+            if (usuarioService.findByEmail(email).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("campo", "email", "mensaje", "Este correo electrónico ya está en uso."));
+            }
             usuario.setEmail(email);
         }
-
+    
         if (password != null && !password.isEmpty()) {
             usuario.setPassword(passwordEncoder.encode(password));
         }
-
-        Usuario actualizado = usuarioService.saveDirect(usuario);
-        actualizado.setPassword(null);
-
-        return ResponseEntity.ok(actualizado);
-    }
+    
+        usuarioService.save(usuario);
+        usuario.setPassword(null);
+        return ResponseEntity.ok(usuario);
+    }    
 
     // Eliminar cuenta del usuario autenticado (y sus archivos relacionados)
     @DeleteMapping("/eliminar")
