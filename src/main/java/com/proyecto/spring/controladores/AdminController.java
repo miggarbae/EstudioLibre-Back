@@ -80,4 +80,3 @@ public class AdminController {
         return ResponseEntity.ok(archivoRepository.buscarPorNombreOUsuario(termino));
     }
 }
-

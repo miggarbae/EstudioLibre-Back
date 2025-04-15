@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -37,6 +38,10 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Archivo> archivos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Comentario> comentarios;
 
     // tranforma la ruta real en dusco en una ruta accesible via http
     // por ejemplo: /perfiles/imagen.jpg
