@@ -27,9 +27,11 @@ public class ArchivoService {
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "text/plain",
-        "application/rtf"
+        "application/rtf",
+        "application/zip",
+        "application/x-zip-compressed"
     );
-
+    
     public Archivo guardarArchivo(MultipartFile archivo, Usuario usuario, String descripcion, String asignatura, String nivelEstudio) throws IOException {
         String tipo = archivo.getContentType();
         
