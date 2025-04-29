@@ -48,7 +48,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir Angular
+                // config.setAllowedOrigins(List.of("http://localhost:4200")); // Permitir Angular
+                config.setAllowedOrigins(List.of("*"));
                 config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permitir todos los métodos
                 config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Permitir headers necesarios
                 config.setExposedHeaders(List.of("Authorization")); // Exponer el header Authorization
