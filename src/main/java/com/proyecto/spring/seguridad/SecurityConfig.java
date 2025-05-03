@@ -60,8 +60,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/perfiles/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/usuarios/*/imagen").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/usuarios/*/imagen").authenticated()
